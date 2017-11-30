@@ -1,3 +1,7 @@
+import random # This should be on line 1
+print(random.randint(0,100))
+
+
 # print("Hello world")
 #
 # # Trinity
@@ -73,5 +77,29 @@ def grade_calc(percentage):
         return "C"
     elif percentage >=60:
         return "D"
-    elif:
+    else :
         return "F"
+
+
+def happy_bday(name):
+    print("Happy birthday to you" + ",")
+    print("Happy birthday to you" + ",")
+    print("Happy birthday to " + name + ",")
+    print("Happy birthday to you" + ".")
+
+
+happy_bday("John")
+
+
+# loops
+
+for num in range (10):
+    print(num + 1)
+
+
+
+a = 1
+while a <= 10:
+    print(a)
+    a += 1
+
