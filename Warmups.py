@@ -17,3 +17,9 @@ def add_py(name):
         print(name + ".py") # Solution 2
 
 
+# 12.6.17
+def add(num1, num2, num3):
+    print(num1 + num2 + num3)
+
+
+add(90, 900, 9000)

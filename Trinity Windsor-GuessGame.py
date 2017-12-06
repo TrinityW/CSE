@@ -1,5 +1,6 @@
 import random
-print(random.randint(1,50))
+num = random.randint(1,50)
+print(num)
 
 
 print("Try to guess a random number 1-50.")
@@ -7,18 +8,17 @@ print("You have 5 guesses.")
 print("Good luck!")
 
 guess = input("What is your guess?")
-print(guess == random.randint)
+print(guess == str(num))
 
 
-def guess(number):
-    if number >= number:
-        return "lower"
-    elif number <= number:
-        return "higher"
-    elif number ==number:
-        return "correct"
+def guess(num):
+    if num == guess:
+        return "Correct"
+    elif num >= guess:
+        return "Lower"
+    elif num <= guess:
+        return "Higher"
 
-guess("%s" % guess)
 
 
 # 1. Generate random number
