@@ -36,3 +36,13 @@ def repeat(string):
 
 
 repeat("hello")
+
+
+# 12.8.17
+def date(month, day, year):
+    print(month + "/" + day + "/" + year)
+
+
+date("12", "8", "17")
+
+
