@@ -87,15 +87,13 @@ def happy_bday(name):
     print("Happy birthday to " + name + ",")
     print("Happy birthday to you" + ".")
 
-
 happy_bday("John")
 
 
 # loops
 
-for num in range (10):
+for num in range(10):
     print(num + 1)
-
 
 
 a = 1
@@ -104,15 +102,15 @@ while a <= 10:
     a += 1
 
 # Comparisons
-print(1 == 1) # Is 1 equal to 1?
-print(1 != 2) # Is 2 not equal to 2?
+print(1 == 1)  # Is 1 equal to 1?
+print(1 != 2)  # Is 2 not equal to 2?
 print(10 <= 15)
 print(not False)
 
 # Recasting
 c = '1'
 print(c == 1)
-print(int(c) == 1) # Both are ints
-print(c == str(1)) # Both are strings
+print(int(c) == 1)  # Both are ints
+print(c == str(1))  # Both are strings
 
-# The input command ALWAYS gives a sting
+# The input command ALWAYS gives a string
