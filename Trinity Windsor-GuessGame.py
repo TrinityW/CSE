@@ -1,6 +1,6 @@
 import random
 num = random.randint(0,50)
-print(num)
+# print(num)
 
 
 print("Try to guess a random number 0-50.")

@@ -88,7 +88,8 @@ class Jewelry(Accessories):
         self.money = money
 
     def sell(self):
-        print("you sold it for %s" % self.money)
+        print("you sow"
+              "ld it for %s" % self.money)
 
 
 class Necklaces(Jewelry):
@@ -579,7 +580,6 @@ Penguin_Corner = Room("Penguin Corner", "Sushi_Room", None, "Money_Room", "Loser
 current_node = Puppy_Corner
 directions = ['north', 'south', 'east', 'west', 'northeast', 'northwest', 'southwest', 'southeast', 'up1', 'up2', 'up3']
 short_direction = ['n', 's', 'e', 'w', 'ne', 'nw', 'sw', 'se', 'u1', 'u2', 'u3']
-inventory = []
 
 while True:
     # print where you are
@@ -610,27 +610,23 @@ while True:
     if command == 'quit':
         quit(0)
 
-    # short direction
     if command in short_direction:
         pos = short_direction.index(command)
         command = directions[pos]
 
     # Take Items
-    if "take" in command:
+    if "take " in command:
         item_requested = command[5:]
         found = False
         for item in current_node.item:
             if item.name == item_requested:
                 you.inventory.append(item)
-                print(inventory)
                 found = True
-                print("You take the %s" % item_requested)
-                current_node.item.remove(item)
         if not found:
             print("I don't see it here")
 
     # Handles Movement
-    elif command in directions:
+    if command in directions:
         try:
             current_node.move(command)
         except KeyError:
