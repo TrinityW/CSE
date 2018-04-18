@@ -579,23 +579,15 @@ Penguin_Corner = Room("Penguin Corner", "Sushi_Room", None, "Money_Room", "Loser
 current_node = Puppy_Corner
 directions = ['north', 'south', 'east', 'west', 'northeast', 'northwest', 'southwest', 'southeast', 'up1', 'up2', 'up3']
 short_direction = ['n', 's', 'e', 'w', 'ne', 'nw', 'sw', 'se', 'u1', 'u2', 'u3']
-inventory = []
 
 while True:
     # print where you are
-    print(current_node.name)
+    print("You are in %s" % current_node.name)
     print(current_node.description)
-    # print(current_node.characters.name)
-    print()
-
-    # if current_node.characters.name is None:
-    #     print("There are no characters in the room")
-    # if current_node.characters.name is not None:
-    #     print("There is the following characters in the room")
-    #     for i, n in enumerate(current_node.characters.name):
-    #         print("%d : %s" % (i+1, n.characters.name))
-    #     print()
-
+    if current_node.characters is not None:
+        print("There is a %s in the room" % current_node.characters.name)
+    if current_node.characters is None:
+        print("There are no characters in the room")
     if current_node.item is None:
         print("There are no items in the room")
     if current_node.item is not None:
