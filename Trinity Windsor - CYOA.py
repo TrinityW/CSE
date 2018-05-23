@@ -1,3 +1,19 @@
+def print_room_info(room):
+    print("You are in %s." % room.name)
+    print(room.description)
+    if room.characters is not None:
+        print("There is a %s in the room." % room.characters.name)
+    else:
+        print("There are no characters in the room.")
+    if room.item is None:
+        print("There are no items in the room.")
+    else:
+        print("There are the following items in the room:")
+        for i, n in enumerate(room.item):
+            print("%d : %s" % (i + 1, n.name))
+        print()
+
+
 class Item(object):
     def __init__(self, name):
         self.name = name
@@ -137,10 +153,11 @@ class Weapon(Item):
         self.durability = 100
         self.attack_damage = attack_damage
 
-    def attack(self):
-        print("You attacked")
+    def attack(self, target):
+        print("You attacked %s." % target.name)
         self.durability -= 5
         print(self.durability)
+        target.take_damage(self.attack_damage)
 
 
 class Stick(Weapon):
@@ -152,10 +169,19 @@ class Spoon(Weapon):
     def __init__(self):
         super(Spoon, self).__init__("spoon", 5)
 
+    def throw(self, target):
+        print("You throw the %s at %s." % (self.name, target.name))
+        self.attack(target)
 
-class Book(Weapon):
+
+class Readable(Item):
+    def __init__(self, name):
+        super(Readable, self).__init__(name)
+
+
+class Book(Readable):
     def __init__(self):
-        super(Book, self).__init__("book", 5)
+        super(Book, self).__init__("book")
 
 
 class Flower(Item):
@@ -168,9 +194,24 @@ class Money(Item):
         super(Money, self).__init__("money")
 
 
-class Key(Item):
+class Keys(Item):
     def __init__(self, name):
-        super(Key, self).__init__(name)
+        super(Keys, self).__init__(name)
+
+
+class Key1(Keys):
+    def __init__(self):
+        super(Key1, self).__init__("key1")
+
+
+class Key2(Keys):
+    def __init__(self):
+        super(Key2, self).__init__("key2")
+
+
+class Key3(Keys):
+    def __init__(self):
+        super(Key3, self).__init__("key3")
 
 
 class TV(Item):
@@ -242,30 +283,39 @@ class Mirror(Item):
     def __init__(self):
         super(Mirror, self).__init__("mirror")
 
+class Door(Item):
+    def __init__(self, name, locked):
+        super(Door, self).__init__(name)
+        self.locked = locked
+
+
+class Trapdoor(Door):
+    def __init__(self):
+        super(Trapdoor, self).__init__("trap door", True)
+
 
 class Character(object):
-    def __init__(self, name, attack, description, status):
+    def __init__(self, name, attack, description, status, clothing):
         self.name = name
         self.attack_amt = attack
         self.description = description
         self.status = status
         self.health = 100
         self.inventory = []
+        self.clothing = clothing
 
-    # def attack(self, target):
-    #     target.damage(self.attack_amt)
-    #
-    # def damage(self, dmg):
-    #     self.health -= dmg
+    def take_damage(self, dmg):
+        self.health -= dmg
+        print("%s has %d health left." % (self.name, self.health))
 
 
-puppy = Character("puppy", 3, "It's a crazy little puppy.", "rambunctious")
-koala = Character("koala", 4, "It's a cute little koala", "lazy")
-penguin = Character("penguin", 6, "It's a hungry penguin", "pissed")
-llama = Character("llama", 5, "It's a stinky llama", "tired")
-you = Character("you", 20, "It's you", None)
-panda = Character("panda", None, "Its a serving panda", "working")
-puppy_god = Character("puppy god", 50, "PUPPYYYYY GOOOODDDD", "ANGRY")
+puppy = Character("puppy", 3, "It's a crazy little puppy.", "rambunctious", None)
+koala = Character("koala", 4, "It's a cute little koala.", "lazy", None)
+penguin = Character("penguin", 6, "It's a hungry penguin.", "pissed", None)
+llama = Character("llama", 5, "It's a stinky llama.", "tired", None)
+you = Character("you", 20, "It's you.", None, None)
+panda = Character("panda", None, "Its a serving panda.", "working", None)
+puppy_god = Character("puppy god", 50, "PUPPYYYYY GOOOODDDD.", "ANGRY", None)
 
 
 class Room(object):
@@ -314,7 +364,9 @@ beer = Beer()
 grilled_chicken = Grilled_Chicken()
 go_cart = Go_Cart()
 money = Money()
-key = Key("key")
+key1 = Key1()
+key2 = Key2()
+key3 = Key3()
 ball = Ball()
 nail_polish = Nail_Polish()
 popcorn = Popcorn()
@@ -359,11 +411,12 @@ Flower_Room = Room("Flower Room", "Water_Slide_Room", "Koala_Corner", "Garden_Ro
 
 Koala_Corner = Room("Koala Corner", "Flower_Room", None, "Garden_Room", None, None, "Puppy_Corner", None,
                     "Penguin_Corner", None, None, None,  "Koalas fill the room, one koala plays with what looks like"
-                    " something you may need. There are doors north and east", koala, [bamboo, key])
+                    " something you may need. There are doors north and east", koala, [bamboo, key1])
 
 Twilight_Library = Room("Twilight Library", "Puppy_Corner", "Bean_Bag_Room", "Computer_Room", "Froyo_Room", None, None,
                         None, None, None, None, None, "The library is full of all the different genres of books, most "
-                        "book are the Twilight series.There are doors north, south, east, and west.", None, [book])
+                        "book are the Twilight series.There are doors north, south, east, and west. There is a book"
+                        " that has a picture of the maze on the cover", None, [book])
 
 Bean_Bag_Room = Room("Bean Bag Room", "Twilight_Library", "Bathroom1", "Gym", "Hallway1", None, None, None, None, None,
                      None, None, "The room is filled with soft chairs and tables. West is a hallway, north, east and "
@@ -454,7 +507,7 @@ Mirror_Room = Room("Mirror Room", "Clothes_Closet", None, "Sushi_Room", None, No
 
 Llama_Corner = Room("Llama Corner", None, "Bathroom2", "Party_Room", "Nail_Salon", None, "Puppy_Corner", "Movie_Room",
                     None, None, None, None, "The room is full of spit and llamas. One llama is stepping over an object"
-                    " that could be of your use. There are doors south, east, and west.", llama, [key])
+                    " that could be of your use. There are doors south, east, and west.", llama, [key2])
 
 Bathroom2 = Room("Bathroom2", "Llama_Corner", None, None, "Clothes_Closet", None, None, None, None, None, None, None,
                  "Its a clean bathroom with shower access. There are doors north and west.", None, [towel])
@@ -465,29 +518,21 @@ Sushi_Room = Room("Sushi Room", "Party_Room", "Penguin_Corner", None, "Mirror_Ro
 
 Penguin_Corner = Room("Penguin Corner", "Sushi_Room", None, "Money_Room", "Loser_layer", None, None, "Koala_Corner",
                       None, None, None, None, "The room is filled with snow and penguins. One penguin carries something"
-                      " between its legs. There are doors north, east, and west", penguin, [key])
+                      " between its legs. There are doors north, east, and west", penguin, [key3])
 
-
+print("Access your controls but typing 'controls'")
+print("You also have objectives to gain points, access them bye typing 'objectives'")
+print()
 current_node = Puppy_Corner
 directions = ['north', 'south', 'east', 'west', 'northeast', 'northwest', 'southwest', 'southeast', 'up1', 'up2', 'up3']
 short_direction = ['n', 's', 'e', 'w', 'ne', 'nw', 'sw', 'se', 'u1', 'u2', 'u3']
+book_read = False
+game_points = 0
+
+print_room_info(current_node)
 
 while True:
     print()
-    print("You are in %s" % current_node.name)
-    print(current_node.description)
-    if current_node.characters is not None:
-        print("There is a %s in the room" % current_node.characters.name)
-    if current_node.characters is None:
-        print("There are no characters in the room")
-    if current_node.item is None:
-        print("There are no items in the room")
-    else:
-        print("There are the following items in the room:")
-        for i, n in enumerate(current_node.item):
-            print("%d : %s" % (i+1, n.name))
-        print()
-
     command = input('>_').lower()
 
     if command == 'quit':
@@ -503,48 +548,193 @@ while True:
         for item in current_node.item:
             if item.name == item_requested:
                 you.inventory.append(item)
-                for item in you.inventory:
-                    print("You take the %s" % item_requested)
-                    print("You have a %s in your inventory" % item.name)
+                print("You now have a %s in your inventory." % item.name)
                 found = True
                 current_node.item.remove(item)
+                if isinstance(item, Keys):
+                    game_points += 10
+                    print("You earn 10 points.")
         if not found:
-            print("I don't see it here")
+            print("I don't see it here.")
 
-    elif "print inventory" in command:
+    elif "inventory" in command:
         for item in you.inventory:
             print(item.name)
         if len(you.inventory) == 0:
-            print("There is nothing in your inventory")
-
-    elif command in directions:
-        try:
-            current_node.move(command)
-        except KeyError:
-            print("You cannot go this way.")
+            print("There is nothing in your inventory.")
 
     elif "drink" in command:
         item_requested = command[6:]
         found = False
         for item in you.inventory:
             if item.name == item_requested:
-                print("You drank %s" % item.name)
                 found = True
-                you.inventory.remove(item)
+                if isinstance(item, Consumable):
+                    print("You drank %s." % item.name)
+                    print("You earned 5 points")
+                    game_points += 5
+                    you.inventory.remove(item)
+                else:
+                    print("You cannot drink this.")
         if not found:
-            print("You don't have a %s" % item_requested)
+            print("You don't have a %s." % item_requested)
 
     elif "eat" in command:
         item_requested = command[4:]
         found = False
         for item in you.inventory:
             if item.name == item_requested:
-                print("You ate %s" % item.name)
+                found = True
+                if isinstance(item, Consumable):
+                    print("You ate %s." % item.name)
+                    print("You earned 5 points")
+                    game_points += 5
+                    you.inventory.remove(item)
+                else:
+                    print("You cannot eat this.")
+        if not found:
+                print("You don't have %s." % item_requested)
+
+    elif "look" in command:
+        print_room_info(current_node)
+
+    elif "game points" in command:
+        print(game_points)
+
+    elif "drop" in command:
+        item_requested = command[5:]
+        found = False
+        for item in you.inventory:
+            if item.name == item_requested:
+                print("You dropped %s." % item.name)
                 found = True
                 you.inventory.remove(item)
-        if not found:
+            if not found:
                 print("You don't have %s" % item_requested)
 
+    elif "wear" in command:
+        item_requested = command[5:]
+        found = False
+        for item in you.inventory:
+            if item.name == item_requested:
+                found = True
+                if isinstance(item, Wearable):
+                    print("You put on a %s." % item.name)
+                    print("You earned 3 points")
+                    game_points += 3
+                    you.inventory.remove(item)
+            else:
+                print("You cannot wear this.")
+        if not found:
+            print("You do not have %s." % item_requested)
+
+    elif "read" in command:
+        item_requested = command[5:]
+        found = False
+        for item in you.inventory:
+            if item.name == item_requested:
+                found = True
+                if isinstance(item, Readable):
+                    if not book_read:
+                        game_points += 5
+                        print("You gain 5 points")
+                    book_read = True
+                    print("The book says:")
+                    print("Hello, you are in the corner maze map. Your goal in the game is to find all the keys and "
+                          "unlock whats behind the trap door in Puppy Corner. Good luck and don't get lost! *tip* You "
+                          "might want to write down the maze on a piece of paper.")
+            else:
+                print("You cannot read this.")
+        if not found:
+            print("You do not have %s." % item_requested)
+
+    elif "unlock" in command and current_node == Puppy_Corner:
+        if key1 in you.inventory and key2 in you.inventory and key3 in you.inventory:
+            print("You used your keys")
+            you.inventory.remove(key1)
+            you.inventory.remove(key2)
+            you.inventory.remove(key3)
+            print()
+            current_node = Trap_Door
+            print(print_room_info(current_node))
+        else:
+            print("You do not have all the keys")
+
+    elif "throw" in command:
+        item_requested = command[6:]
+        found = False
+        for item in you.inventory:
+            if item.name == item_requested:
+                found = True
+                target_requested = input("Who do you want to hit?")
+                target = None
+                if current_node.characters is not None and current_node.characters.name.lower() == target_requested.\
+                        lower():
+                    target = current_node.characters
+                    if target_requested.lower() == puppy_god.name.lower():
+                        print("He ate the item")
+                if target is None:
+                    print("They aren't here.")
+                else:
+                    item.throw(target)
+        if not found:
+                print("You don't have %s." % item_requested)
+
+    elif "punch" in command:
+        target_requested = input("Who do you want to hit?")
+        target = None
+        if current_node.characters is not None and current_node.characters.name.lower() == target_requested.lower():
+            target = current_node.characters
+            if target_requested.lower() == puppy_god.name.lower():
+                print("You instantly died from his self defense.")
+                quit(0)
+            target.take_damage(you.attack_amt)
+        if target is None:
+            print("They aren't here.")
+
+    elif "hug" in command:
+        if current_node.characters is puppy_god:
+            print("You hugged puppy god")
+            print("You gained 5 points")
+            print("You and Puppy God are friends")
+            print("game over")
+            quit(0)
+            game_points += 5
+        if current_node.characters is not puppy_god:
+            print("You hugged the %s" % current_node.characters.name)
+    #
+    # elif "give" in command:
+    #     target_requested = input("What do you want to give?")
+    #     if item in you.inventory
+
+    elif "controls" in command:
+        print("You can see your inventory if you type 'inventory.'")
+        print("You can take, throw, eat, drink items by typing the command and item.")
+        print("Type 'look' to get room info.")
+        print("You can wear any item of clothing or jewelery.")
+        print("Access your objectives by typing 'objectives'.")
+        print("Check your game points by typing 'game points'.")
+        print("You can hug others.")
+
+    elif "objectives" in command:
+        print("Read book")
+        print("Collect Key1")
+        print("Collect Key2")
+        print("Collect Key3")
+        print("Eat food")
+        print("Drink refreshments")
+        print("Wear an item of clothing")
+        print("Share a sweet with puppy god")
+        print("Punch a llama")
+        print("Hug puppy god")
+
+    elif command in directions:
+        try:
+            current_node.move(command)
+            print_room_info(current_node)
+        except KeyError:
+            print("You cannot go this way.")
+
     else:
-        print("Command not recognized")
+        print("Command not recognized.")
         print()
